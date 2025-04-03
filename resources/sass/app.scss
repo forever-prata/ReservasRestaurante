@@ -1,0 +1,63 @@
+@import 'bootstrap/scss/bootstrap';
+
+.compact-login {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.compact-login .card {
+    background-color: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+}
+
+.compact-login .card-header {
+    background-color: var(--bs-primary) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.compact-login .form-control {
+    background-color: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.compact-login .form-control:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.compact-login .btn-primary {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.compact-login .form-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    color: var(--bs-body-color);
+}
+
+.compact-login .form-check-label {
+    font-size: 0.85rem;
+}
+.compact-login .card {
+    border: 2px solid var(--bs-primary);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.compact-login .card-body input {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.compact-login .card-body input::placeholder {
+    font-weight: 400;
+    opacity: 0.7;
+    color: var(--bs-secondary-color);
+}
