@@ -72,11 +72,7 @@
         @endguest
     </div>
 
-    <footer class="footer-custom py-3 mt-auto">
-        <div class="container-fluid text-center">
-            <small class="text-muted">Restaurante</small>
-        </div>
-    </footer>
+    @include('footer')
 
     @stack('scripts')
 </body>

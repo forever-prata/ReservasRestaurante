@@ -43,4 +43,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function tipoUsuario() {
+        return $this->belongsTo(TipoUsuario::class, 'tipoUsuario_id');
+    }
 }
