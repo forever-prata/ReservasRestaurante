@@ -3,64 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mesa;
+use App\Models\Reserva;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class MesaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $mesas = Mesa::all();
-        return view('mesas.index', compact('mesas'));
-    }
+        $date = $request->input('date', now()->format('Y-m-d'));
+        $hora_inicio = $request->input('hora_inicio');
+        $hora_fim    = $request->input('hora_fim');
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $selectedDate = Carbon::parse($date);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if ($selectedDate->isSunday()) {
+            $availableMesas = collect();
+        } else {
+            $mesas = Mesa::all();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Mesa $mesa)
-    {
-        //
-    }
+            if ($hora_inicio && $hora_fim) {
+                if ($hora_inicio < '18:00' || $hora_fim > '23:59') {
+                    $availableMesas = collect();
+                } else {
+                    $availableMesas = $mesas->filter(function ($mesa) use ($date, $hora_inicio, $hora_fim) {
+                        $start = Carbon::parse($date . ' ' . $hora_inicio . ':00');
+                        $end   = Carbon::parse($date . ' ' . $hora_fim . ':00');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Mesa $mesa)
-    {
-        //
-    }
+                        $conflito = Reserva::where('mesa_id', $mesa->id)
+                            ->whereDate('inicio', $date)
+                            ->where(function ($query) use ($start, $end) {
+                                $query->where(function ($q) use ($start, $end) {
+                                    $q->where('inicio', '<', $end)
+                                      ->where('fim', '>', $start);
+                                });
+                            })->exists();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Mesa $mesa)
-    {
-        //
-    }
+                        return !$conflito;
+                    });
+                }
+            } else {
+                $availableMesas = $mesas;
+            }
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Mesa $mesa)
-    {
-        //
+        return view('mesas.index', compact('availableMesas', 'date', 'hora_inicio', 'hora_fim'));
     }
 }

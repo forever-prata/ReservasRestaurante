@@ -22,27 +22,6 @@
 
     <div class="container-fluid flex-grow-1 p-0">
         @auth
-        <div class="d-flex">
-            <nav class="sidebar d-none d-lg-block">
-                <div class="pt-3">
-                    <a href="#" class="d-block sidebar-item active">
-                        <i class="fas fa-chart-line me-2"></i>Dashboard
-                    </a>
-                    <a href="#" class="d-block sidebar-item">
-                        <i class="fas fa-calendar-check me-2"></i>Reservas
-                    </a>
-                    <a href="#" class="d-block sidebar-item">
-                        <i class="fas fa-table me-2"></i>Mesas
-                    </a>
-                    <a href="#" class="d-block sidebar-item">
-                        <i class="fas fa-users me-2"></i>Clientes
-                    </a>
-                    <a href="#" class="d-block sidebar-item">
-                        <i class="fas fa-chart-pie me-2"></i>Relatórios
-                    </a>
-                </div>
-            </nav>
-
             <main role="main" class="flex-grow-1 p-4">
                 <div class="main-content p-4 hover-effect">
                     @hasSection('body')
