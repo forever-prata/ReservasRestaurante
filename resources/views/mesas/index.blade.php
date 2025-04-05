@@ -14,30 +14,29 @@
                 <div class="col-4">
                     <select name="hora_inicio" id="horaInicio" class="form-control text-center">
                         <option value="">Início</option>
-                        @php
-                            for ($h = 18; $h <= 23; $h++):
-                                $time = sprintf('%02d:00', $h);
-                        @endphp
-                            <option value="{{ $time }}" {{ (isset($hora_inicio) && $hora_inicio == $time) ? 'selected' : '' }}>{{ $time }}</option>
-                        @php endfor; @endphp
+                        @for($h = 18; $h <= 23; $h++)
+                            @php $time = sprintf('%02d:00', $h); @endphp
+                            <option value="{{ $time }}" {{ (isset($hora_inicio) && $hora_inicio == $time) ? 'selected' : '' }}>
+                                {{ $time }}
+                            </option>
+                        @endfor
                     </select>
                 </div>
                 <div class="col-4">
                     <select name="hora_fim" id="horaFim" class="form-control text-center">
                         <option value="">Término</option>
-                        @php
-                            for ($h = 19; $h <= 23; $h++):
-                                $time = sprintf('%02d:00', $h);
-                        @endphp
-                            <option value="{{ $time }}" {{ (isset($hora_fim) && $hora_fim == $time) ? 'selected' : '' }}>{{ $time }}</option>
-                        @php endfor; @endphp
+                        @for($h = 19; $h <= 23; $h++)
+                            @php $time = sprintf('%02d:00', $h); @endphp
+                            <option value="{{ $time }}" {{ (isset($hora_fim) && $hora_fim == $time) ? 'selected' : '' }}>
+                                {{ $time }}
+                            </option>
+                        @endfor
                         <option value="23:59" {{ (isset($hora_fim) && $hora_fim == '23:59') ? 'selected' : '' }}>23:59</option>
                     </select>
                 </div>
             </div>
         </form>
     </div>
-
 
     @if(\Carbon\Carbon::parse($date)->isSunday())
         <div class="alert alert-danger text-center">
@@ -51,9 +50,18 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">{{ $mesa->descricao }}</h5>
-                        <a href="{{ route('reservas.create', ['mesa_id' => $mesa->id, 'date' => $date]) }}" class="btn btn-primary">
-                            Reservar
-                        </a>
+                        @if(isset($hora_inicio) && !empty($hora_inicio) && isset($hora_fim) && !empty($hora_fim))
+                            <form action="{{ route('reservas.store') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="mesa_id" value="{{ $mesa->id }}">
+                                <input type="hidden" name="data" value="{{ $date }}">
+                                <input type="hidden" name="hora_inicio" value="{{ $hora_inicio }}">
+                                <input type="hidden" name="hora_fim" value="{{ $hora_fim }}">
+                                <button type="submit" class="btn btn-primary">Reservar</button>
+                            </form>
+                        @else
+                            <button class="btn btn-secondary" disabled>Preencha data e horário</button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -67,7 +75,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const form = document.getElementById('filterForm');
+        const filterForm = document.getElementById('filterForm');
         const dateInput = document.getElementById('reservaData');
         const horaInicio = document.getElementById('horaInicio');
         const horaFim = document.getElementById('horaFim');
@@ -98,11 +106,11 @@
             return valid;
         }
 
-        function submitForm() {
+        function submitFilterForm() {
             if (!validateTime()) {
-                setTimeout(() => { form.submit(); }, 500);
+                setTimeout(() => { filterForm.submit(); }, 500);
             } else {
-                form.submit();
+                filterForm.submit();
             }
         }
 
@@ -112,11 +120,11 @@
                 this.value = '';
                 return;
             }
-            submitForm();
+            submitFilterForm();
         });
 
-        horaInicio.addEventListener('change', submitForm);
-        horaFim.addEventListener('change', submitForm);
+        horaInicio.addEventListener('change', submitFilterForm);
+        horaFim.addEventListener('change', submitFilterForm);
     });
 </script>
 @endsection

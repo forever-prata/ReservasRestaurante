@@ -13,7 +13,7 @@
             <label class="form-label">Selecione o horário disponível:</label>
             @if(count($availableSlots) > 0)
                 @foreach($availableSlots as $slot)
-                <div class=\"form-check\">
+                <div class="form-check">
                     <input class="form-check-input" type="radio" name="slot" id="slot_{{ $loop->index }}" value="{{ $slot['inicio'] }}-{{ $slot['fim'] }}">
                     <label class="form-check-label" for="slot_{{ $loop->index }}">
                         Das {{ $slot['inicio'] }} às {{ $slot['fim'] }}

@@ -73,13 +73,13 @@ class ReservaController extends Controller
         $validated = $request->validate([
             'mesa_id' => 'required|exists:mesas,id',
             'data'    => 'required|date',
-            'slot'    => 'required|string',
+            'hora_inicio' => 'required',
+            'hora_fim'    => 'required',
         ]);
 
-        list($inicioStr, $fimStr) = explode('-', $validated['slot']);
         $date = $validated['data'];
-        $inicio = Carbon::parse($date . ' ' . $inicioStr . ':00');
-        $fim    = Carbon::parse($date . ' ' . $fimStr . ':00');
+        $inicio = Carbon::parse($date . ' ' . $validated['hora_inicio'] . ':00');
+        $fim    = Carbon::parse($date . ' ' . $validated['hora_fim'] . ':00');
 
         if ($inicio->format('H:i') < '18:00' || $fim->format('H:i') > '23:59') {
             return back()->withErrors(['Horários de reserva devem estar entre 18:00 e 23:59.'])->withInput();
@@ -93,7 +93,6 @@ class ReservaController extends Controller
                   ->where('fim', '>', $inicio);
             });
         })->exists();
-
 
         if ($conflito) {
             return back()->withErrors(['A mesa já está reservada para esse período.'])->withInput();
